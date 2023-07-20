@@ -4,7 +4,7 @@
 $jsonData = file_get_contents('data.json');
 $data = json_decode($jsonData, true);
 
-// Проверяем, существуют ли необходимые данные
+// Проверяем, существуют ли необходимые данные в файле data.json
 if (isset($data['value']) && isset($data['apsa']) && isset($data['do'])) {
     $ipAddress = $_SERVER['REMOTE_ADDR']; // Получаем IP-адрес пользователя
     $url = 'https://ipinfo.io/' . $ipAddress . '/country/';
@@ -17,10 +17,10 @@ if (isset($data['value']) && isset($data['apsa']) && isset($data['do'])) {
         $data['allowed'] = ($country === "RU");
         $data['country_code'] = $country;
     }
-
-    header('Content-Type: application/json');
-    echo json_encode($data); // Возвращаем данные в формате JSON
-
 } else {
-    echo json_encode(null);
+    // Если не удалось получить данные из data.json, установите значение allowed в null
+    $data['allowed'] = null;
 }
+
+header('Content-Type: application/json');
+echo json_encode($data); // Возвращаем данные в формате JSON
